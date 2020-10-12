@@ -1,8 +1,6 @@
 name: Generate PlantUML Diagrams
 on:
   push:
-    branches-ignore:
-      - master
     paths:
       - 'docs/diagrams/**.puml'
       - '!docs/diagrams/tracing/**.puml'
@@ -23,11 +21,13 @@ jobs:
       - name: UML files considered echo output
         run: |
           echo ${{ steps.getfile.outputs.files }}
-      - name: Generate PNG Diagrams
+      - if: steps.getfile.outputs.files != ""
+        name: Generate PNG Diagrams
         uses: cloudbees/plantuml-github-action@master
         with:
           args: -v -tpng ${{ steps.getfile.outputs.files }} -o "/github/workspace/docs/images"
-      - name: Push Local Changes
+      - if: steps.getfile.outputs.files != ""
+        name: Push Local Changes
         uses: stefanzweifel/git-auto-commit-action@v4.1.2
         with:
           commit_message: "Generate PNG images for PlantUML diagrams"
