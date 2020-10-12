@@ -21,12 +21,12 @@ jobs:
       - name: UML files considered echo output
         run: |
           echo ${{ steps.getfile.outputs.files }}
-      - if: contains(steps.getfile.outputs.files, "puml")
+      - if: contains(steps.getfile.outputs.files, 'puml')
         name: Generate PNG Diagrams
         uses: cloudbees/plantuml-github-action@master
         with:
           args: -v -tpng ${{ steps.getfile.outputs.files }} -o "/github/workspace/docs/images"
-      - if: contains(steps.getfile.outputs.files, "puml")
+      - if: contains(steps.getfile.outputs.files, 'puml')
         name: Push Local Changes
         uses: stefanzweifel/git-auto-commit-action@v4.1.2
         with:
