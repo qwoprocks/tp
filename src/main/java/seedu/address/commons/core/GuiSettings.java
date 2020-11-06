@@ -12,12 +12,13 @@ import java.util.Objects;
 public class GuiSettings implements Serializable {
 
     private static final double DEFAULT_HEIGHT = 600;
-    private static final double DEFAULT_WIDTH = 740;
+    private static final double DEFAULT_WIDTH = 800;
     private static final double MAX_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
     private static final double MAX_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     private static final int MIN_Y = 0;
     private static final int MAX_Y = (int) MAX_HEIGHT / 2;
-    private static final int MAX_ABSOLUTE_X = (int) MAX_WIDTH / 2;
+    private static final int MIN_X = 0;
+    private static final int MAX_X = (int) MAX_WIDTH / 2;
 
     private final double windowWidth;
     private final double windowHeight;
@@ -58,10 +59,10 @@ public class GuiSettings implements Serializable {
     private Point getTruncatedWindowCoordinates(int x, int y) {
         int truncatedX = x;
         int truncatedY = y;
-        if (x < -MAX_ABSOLUTE_X) {
-            truncatedX = -MAX_ABSOLUTE_X;
-        } else if (x > MAX_ABSOLUTE_X) {
-            truncatedX = MAX_ABSOLUTE_X;
+        if (x < MIN_X) {
+            truncatedX = MIN_X;
+        } else if (x > MAX_X) {
+            truncatedX = MAX_X;
         }
         if (y < MIN_Y) {
             truncatedY = MIN_Y;
