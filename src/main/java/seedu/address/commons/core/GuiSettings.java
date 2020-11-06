@@ -1,6 +1,7 @@
 package seedu.address.commons.core;
 
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,6 +13,11 @@ public class GuiSettings implements Serializable {
 
     private static final double DEFAULT_HEIGHT = 600;
     private static final double DEFAULT_WIDTH = 740;
+    private static final double MAX_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    private static final double MAX_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+    private static final int MIN_Y = 0;
+    private static final int MAX_Y = (int) MAX_HEIGHT / 2;
+    private static final int MAX_ABSOLUTE_X = (int) MAX_WIDTH / 2;
 
     private final double windowWidth;
     private final double windowHeight;
@@ -30,21 +36,39 @@ public class GuiSettings implements Serializable {
      * Constructs a {@code GuiSettings} with the specified height, width and position.
      */
     public GuiSettings(double windowWidth, double windowHeight, int xPosition, int yPosition) {
-        this.windowWidth = windowWidth;
-        this.windowHeight = windowHeight;
-        windowCoordinates = new Point(xPosition, yPosition);
+        this.windowWidth = Math.min(windowWidth, MAX_WIDTH);
+        this.windowHeight = Math.min(windowHeight, MAX_HEIGHT);
+        windowCoordinates = getTruncatedWindowCoordinates(xPosition, yPosition);
     }
 
     public double getWindowWidth() {
-        return windowWidth;
+        return Math.min(windowWidth, MAX_WIDTH);
     }
 
     public double getWindowHeight() {
-        return windowHeight;
+        return Math.min(windowHeight, MAX_HEIGHT);
     }
 
     public Point getWindowCoordinates() {
-        return windowCoordinates != null ? new Point(windowCoordinates) : null;
+        return windowCoordinates != null
+                ? getTruncatedWindowCoordinates((int) windowCoordinates.getX(), (int) windowCoordinates.getY())
+                : null;
+    }
+
+    private Point getTruncatedWindowCoordinates(int x, int y) {
+        int truncatedX = x;
+        int truncatedY = y;
+        if (x < -MAX_ABSOLUTE_X) {
+            truncatedX = -MAX_ABSOLUTE_X;
+        } else if (x > MAX_ABSOLUTE_X) {
+            truncatedX = MAX_ABSOLUTE_X;
+        }
+        if (y < MIN_Y) {
+            truncatedY = MIN_Y;
+        } else if (y > MAX_Y) {
+            truncatedY = MAX_Y;
+        }
+        return new Point(truncatedX, truncatedY);
     }
 
     @Override
